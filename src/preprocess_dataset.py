@@ -16,6 +16,8 @@ from datasets import load_dataset
 from dotenv import load_dotenv
 from transformers import AutoTokenizer
 
+from src.formatting import format_example
+
 # Load environment variables
 load_dotenv()
 
@@ -37,30 +39,10 @@ dataset = load_dataset(
     "bitext/Bitext-customer-support-llm-chatbot-training-dataset"
 )
 
-
-# Format a dataset example using the Llama chat template
-def format_example(example):
-    messages = [
-        {
-            "role": "user",
-            "content": example["instruction"],
-        },
-        {
-            "role": "assistant",
-            "content": example["response"],
-        },
-    ]
-
-    example["text"] = tokenizer.apply_chat_template(
-        messages,
-        tokenize=False,
-    )
-
-    return example
-
-
 # Apply the formatting to the entire dataset
-formatted_dataset = dataset.map(format_example)
+formatted_dataset = dataset.map(
+    lambda example: format_example(example, tokenizer)
+)
 
 # Display one processed example
 print(formatted_dataset["train"][0]["text"])
