@@ -129,7 +129,6 @@ print(f"Memory footprint: {base_model.get_memory_footprint() / 1e6:.1f} MB")
 # - Train the model,
 # - Monitor validation performance during fine-tuning,
 # - Evaluate generalization on unseen conversations.
-
 # ==========================================================
 
 train_test = dataset["train"].train_test_split(
@@ -157,7 +156,6 @@ print(dataset_split)
 
 # Convert each customer support conversation into the
 # Llama 3.2 chat template expected during supervised fine-tuning.
-
 # ==========================================================
 
 formatted_dataset = dataset_split.map(
@@ -178,7 +176,6 @@ base_model = prepare_model_for_kbit_training(base_model)
 
 # Configure the Low-Rank Adaptation (LoRA) modules that
 # will be trained while keeping the base model frozen.
-
 # ==========================================================
 
 lora_config = LoraConfig(
@@ -286,3 +283,22 @@ trainer = SFTTrainer(
 # ==========================================================
 
 trainer.train()
+
+# ==========================================================
+# Verify the Fine-Tuned Model
+# ==========================================================
+
+print(trainer.model)
+
+# ==========================================================
+# Save the Trained LoRA Adapters
+
+# Save the trained LoRA adapters and tokenizer.
+# Only the adapter weights are saved, not the full base model.
+# ==========================================================
+
+trainer.save_model("./outputs/final_model")
+tokenizer.save_pretrained("./outputs/final_model")
+
+print("Training completed successfully.")
+print("LoRA adapters saved to: ./outputs/final_model")
