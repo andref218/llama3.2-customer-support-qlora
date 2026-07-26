@@ -280,3 +280,9 @@ trainer = SFTTrainer(
     train_dataset=formatted_dataset["train"],
     eval_dataset=formatted_dataset["validation"],
 )
+
+# ==========================================================
+# Start Fine-Tuning
+# ==========================================================
+
+trainer.train()
