@@ -20,7 +20,7 @@ import torch
 import wandb
 
 # Hugging Face
-from datasets import load_dataset
+from datasets import DatasetDict, load_dataset
 from huggingface_hub import login
 from transformers import (
     AutoModelForCausalLM,
@@ -77,6 +77,13 @@ os.environ["WANDB_PROJECT"] = PROJECT_NAME
 os.environ["WANDB_LOG_MODEL"] = "false"
 os.environ["WANDB_WATCH"] = "false"
 
+
+# ==========================================================
+# Load Dataset
+# ==========================================================
+
+dataset = load_dataset(DATASET_NAME)
+
 # ==========================================================
 # Configure 4-bit Quantization
 # ==========================================================
@@ -87,14 +94,6 @@ bnb_config = BitsAndBytesConfig(
     bnb_4bit_compute_dtype=torch.float16,
     bnb_4bit_use_double_quant=True,
 )
-
-
-# ==========================================================
-# Load Dataset
-# ==========================================================
-
-dataset = load_dataset(DATASET_NAME)
-
 
 # ==========================================================
 # Load Tokenizer
@@ -121,3 +120,47 @@ base_model = AutoModelForCausalLM.from_pretrained(
 base_model.generation_config.pad_token_id = tokenizer.pad_token_id
 
 print(f"Memory footprint: {base_model.get_memory_footprint() / 1e6:.1f} MB")
+
+# ==========================================================
+# Split Dataset
+# ==========================================================
+
+# The original dataset only provides a training split.
+# We divide it into training, validation, and test sets to:
+# - Train the model,
+# - Monitor validation performance during fine-tuning,
+# - Evaluate generalization on unseen conversations.
+
+train_test = dataset["train"].train_test_split(
+    test_size=0.2,
+    seed=42,
+)
+
+validation_test = train_test["test"].train_test_split(
+    test_size=0.5,
+    seed=42,
+)
+
+dataset_split = DatasetDict(
+    {
+        "train": train_test["train"],
+        "validation": validation_test["train"],
+        "test": validation_test["test"],
+    }
+)
+
+print(dataset_split)
+
+# ==========================================================
+# Format Dataset
+# ==========================================================
+
+# Convert each customer support conversation into the
+# Llama 3.2 chat template expected during supervised fine-tuning.
+
+formatted_dataset = dataset_split.map(
+    lambda example: format_example(example, tokenizer)
+)
+
+print(formatted_dataset)
+print(formatted_dataset["train"].column_names)
