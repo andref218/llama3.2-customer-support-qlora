@@ -302,3 +302,59 @@ tokenizer.save_pretrained("./outputs/final_model")
 
 print("Training completed successfully.")
 print("LoRA adapters saved to: ./outputs/final_model")
+
+# ==========================================================
+# Inference Helper Function
+
+# Generate a response using the fine-tuned LoRA model.
+# This helper function formats the user prompt with the
+# Llama 3.2 chat template, performs text generation,
+# decodes the output, and prints the conversation.
+# ==========================================================
+
+def ask(question, max_new_tokens=150):
+    messages = [
+        {"role": "user", "content": question}
+    ]
+
+    prompt = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True,
+    )
+
+    inputs = tokenizer(prompt, return_tensors="pt").to(trainer.model.device)
+
+    with torch.no_grad():
+        outputs = trainer.model.generate(
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            do_sample=False,
+            pad_token_id=tokenizer.eos_token_id,
+        )
+
+    generated = outputs[0][inputs["input_ids"].shape[-1]:]
+
+    response = tokenizer.decode(
+        generated,
+        skip_special_tokens=True,
+        clean_up_tokenization_spaces=False,
+    )
+
+    print("=" * 80)
+    print(f"User: {question}\n")
+    print(f"Assistant:\n{response}")
+    print("=" * 80)
+
+    return response
+
+# ==========================================================
+# Example Inference
+#
+# Quick sanity check to verify that the fine-tuned model
+# generates customer support responses.
+# ==========================================================
+
+ask("I want to return my product.")
+ask("My package hasn't arrived.")
+ask("How do I request a refund?")
