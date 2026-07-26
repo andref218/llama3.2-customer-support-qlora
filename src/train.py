@@ -269,3 +269,14 @@ training_args = SFTConfig(
     # Sequence length
     max_length=512,
 )
+
+# ==========================================================
+# Initialize the SFTTrainer with the model, datasets, and training configuration
+# ==========================================================
+
+trainer = SFTTrainer(
+    model=base_model,
+    args=training_args,
+    train_dataset=formatted_dataset["train"],
+    eval_dataset=formatted_dataset["validation"],
+)
