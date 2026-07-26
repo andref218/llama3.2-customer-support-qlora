@@ -217,3 +217,55 @@ total = sum(
 print(f"Trainable parameters: {trainable:,}")
 print(f"Total parameters: {total:,}")
 print(f"Trainable percentage: {100 * trainable / total:.4f}%")
+
+# ==========================================================
+# Configure the training hyperparameters for Supervised Fine-Tuning
+# ==========================================================
+
+training_args = SFTConfig(
+    output_dir="./outputs",
+
+    # Training
+    num_train_epochs=1,
+    learning_rate=2e-4,
+
+    # Batch size
+    per_device_train_batch_size=4,
+    gradient_accumulation_steps=2,
+
+    # Optimizer
+    optim="paged_adamw_32bit",
+    weight_decay=0.001,
+    max_grad_norm=0.3,
+    warmup_ratio=0.01,
+    lr_scheduler_type="cosine",
+
+    # Precision
+    fp16=True,
+    bf16=False,
+
+    # Logging & Monitoring
+    logging_steps=10,
+    report_to="wandb",
+    run_name="qlora-r16-1epoch",
+
+    # Evaluation
+    eval_strategy="steps",
+    eval_steps=100,
+
+    # Checkpointing
+    save_strategy="steps",
+    save_steps=100,
+    save_total_limit=2,
+
+    # Best model selection
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_loss",
+    greater_is_better=False,
+
+    # Reproducibility
+    seed=42,
+
+    # Sequence length
+    max_length=512,
+)
