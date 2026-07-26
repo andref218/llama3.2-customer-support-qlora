@@ -123,13 +123,14 @@ print(f"Memory footprint: {base_model.get_memory_footprint() / 1e6:.1f} MB")
 
 # ==========================================================
 # Split Dataset
-# ==========================================================
 
 # The original dataset only provides a training split.
 # We divide it into training, validation, and test sets to:
 # - Train the model,
 # - Monitor validation performance during fine-tuning,
 # - Evaluate generalization on unseen conversations.
+
+# ==========================================================
 
 train_test = dataset["train"].train_test_split(
     test_size=0.2,
@@ -153,10 +154,11 @@ print(dataset_split)
 
 # ==========================================================
 # Format Dataset
-# ==========================================================
 
 # Convert each customer support conversation into the
 # Llama 3.2 chat template expected during supervised fine-tuning.
+
+# ==========================================================
 
 formatted_dataset = dataset_split.map(
     lambda example: format_example(example, tokenizer)
@@ -164,3 +166,54 @@ formatted_dataset = dataset_split.map(
 
 print(formatted_dataset)
 print(formatted_dataset["train"].column_names)
+
+# ==========================================================
+# Prepare the quantized model for QLoRA fine-tuning
+# ==========================================================
+
+base_model = prepare_model_for_kbit_training(base_model)
+
+# ==========================================================
+# Configure LoRA
+
+# Configure the Low-Rank Adaptation (LoRA) modules that
+# will be trained while keeping the base model frozen.
+
+# ==========================================================
+
+lora_config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM",
+)
+
+# ==========================================================
+# Apply LoRA Adapters to the base model
+# ==========================================================
+
+base_model = get_peft_model(
+    base_model,
+    lora_config,
+)
+
+print(base_model)
+
+# ==========================================================
+# Verify Trainable Parameters
+# ==========================================================
+
+trainable = sum(
+    p.numel() for p in base_model.parameters()
+    if p.requires_grad
+)
+
+total = sum(
+    p.numel() for p in base_model.parameters()
+)
+
+print(f"Trainable parameters: {trainable:,}")
+print(f"Total parameters: {total:,}")
+print(f"Trainable percentage: {100 * trainable / total:.4f}%")
