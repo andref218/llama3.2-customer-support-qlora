@@ -7,14 +7,16 @@
 ![Transformers](https://img.shields.io/badge/🤗_Transformers-Latest-FFD21F?style=for-the-badge)
 ![PEFT](https://img.shields.io/badge/PEFT-QLoRA-blue?style=for-the-badge)
 ![TRL](https://img.shields.io/badge/TRL-SFTTrainer-green?style=for-the-badge)
-![Weights & Biases](https://img.shields.io/badge/W%26B-Experiment_Tracking-FFBE00?style=for-the-badge&logo=weightsandbiases&logoColor=black)
+![Weights & Biases](https://img.shields.io/badge/WANDB-Experiment_Tracking-FFBE00?style=for-the-badge&logo=weightsandbiases&logoColor=black)
 [![Hugging Face](https://img.shields.io/badge/HuggingFace-Model-yellow?style=for-the-badge&logo=huggingface)](https://huggingface.co/andref218/llama3.2-customer-support-qlora)
 
 **Parameter-Efficient Fine-Tuning of Meta Llama 3.2 3B Instruct using QLoRA for Customer Support**
 
 🤗 **Hugging Face Model**
 
-https://huggingface.co/andref218/llama3.2-customer-support-qlora
+[andref218/llama3.2-customer-support-qlora](https://huggingface.co/andref218/llama3.2-customer-support-qlora)
+
+[![Hugging Face Repository](./screenshots/hugging_face_qlora.png)](https://huggingface.co/andref218/llama3.2-customer-support-qlora)
 
 </div>
 
@@ -52,7 +54,7 @@ The complete training workflow is illustrated below.
                  Dataset Formatting (Chat Template)
                                 │
                                 ▼
-             Meta Llama 3.2 3B Instruct (Frozen)
+                Meta Llama 3.2 3B Instruct (Frozen)
                                 │
                   4-bit Quantization (BitsAndBytes)
                                 │
@@ -340,7 +342,7 @@ Once your order has been verified, I can explain the refund process and estimate
 
 The trained LoRA adapter has been published on the Hugging Face Hub and can be downloaded directly.
 
-https://huggingface.co/andref218/llama3.2-customer-support-qlora
+🔗 https://huggingface.co/andref218/llama3.2-customer-support-qlora
 
 ---
 
