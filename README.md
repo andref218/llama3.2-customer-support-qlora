@@ -12,7 +12,7 @@
 
 **Parameter-Efficient Fine-Tuning of Meta Llama 3.2 3B Instruct using QLoRA for Customer Support**
 
-🤗 **Hugging Face Model**
+**Hugging Face Model**:
 
 [andref218/llama3.2-customer-support-qlora](https://huggingface.co/andref218/llama3.2-customer-support-qlora)
 
@@ -34,14 +34,14 @@ This repository documents the complete fine-tuning workflow, from dataset prepar
 
 # Features
 
-- 🚀 Fine-tuned **Meta Llama 3.2 3B Instruct** using **QLoRA** for customer support tasks.
-- ⚡ Efficient **4-bit quantization** with BitsAndBytes to reduce GPU memory requirements.
-- 🎯 Parameter-Efficient Fine-Tuning (PEFT) using **LoRA adapters**.
-- 💬 Supervised Fine-Tuning (SFT) with the **Bitext Customer Support** dataset.
-- 📊 Experiment tracking and visualization with **Weights & Biases**.
-- 🤗 Published trained LoRA adapter on the **Hugging Face Hub**.
-- 📒 Fully documented **Google Colab notebook** reproducing the complete training workflow.
-- 🧩 Modular codebase with reusable dataset formatting utilities.
+- Fine-tuned **Meta Llama 3.2 3B Instruct** using **QLoRA** for customer support tasks.
+- Efficient **4-bit quantization** with BitsAndBytes to reduce GPU memory requirements.
+- Parameter-Efficient Fine-Tuning (PEFT) using **LoRA adapters**.
+- Supervised Fine-Tuning (SFT) with the **Bitext Customer Support** dataset.
+- Experiment tracking and visualization with **Weights & Biases**.
+- Published trained LoRA adapter on the **Hugging Face Hub**.
+- Fully documented **Google Colab notebook** reproducing the complete training workflow.
+- Modular codebase with reusable dataset formatting utilities.
 
 # Project Architecture
 
@@ -425,8 +425,8 @@ WANDB_API_KEY=your_wandb_api_key
 
 The project requires:
 
-- 🤗 Hugging Face account
-- 📊 Weights & Biases account
+- Hugging Face account 🤗 
+- Weights & Biases account 📊 
 
 ---
 
@@ -540,8 +540,8 @@ Beyond machine learning, this project also reinforced software engineering best 
 
 **André Fonseca**
 
-- 💻 GitHub: https://github.com/andref218
-- 🤗 Hugging Face: https://huggingface.co/andref218
+- GitHub: https://github.com/andref218
+- Hugging Face: https://huggingface.co/andref218
 
 # License
 
